@@ -25,6 +25,7 @@ function App() {
   let [num, nameOfWork ]=useState(0)
   let addByOne=()=>{
     nameOfWork(num+1)
+    console.log(num)
   }
   let subtractByOne=()=>{
     num=num-1
