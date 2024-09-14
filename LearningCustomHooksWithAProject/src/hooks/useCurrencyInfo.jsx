@@ -8,7 +8,6 @@ function useCurrencyInfo(currency) {
         fetch(`https://latest.currency-api.pages.dev/v1/currencies/${currency}.json`)
             .then((result) =>
                 result.json()
-            
 
             ).then((result) =>
                 setData(result[currency])
