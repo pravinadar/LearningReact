@@ -23,15 +23,15 @@ function Layout() {
   );
 }
 ```
-Layout Component Explanation:
+## Layout Component Explanation:
 
 The Layout component represents the general structure of the layout used throughout your app:
 
-Header: Renders the Header component at the top of the page, likely containing elements like navigation links or branding.
+`Header`: Renders the Header component at the top of the page, likely containing elements like navigation links or branding.
 
-Outlet: The Outlet component will render the child components that match the current route. For example, if the user navigates to the /about page, the About component will be rendered in place of Outlet.
+`Outlet`: The Outlet component will render the child components that match the current route. For example, if the user navigates to the /about page, the About component will be rendered in place of Outlet.
 
-Footer: Renders the Footer component, which stays static at the bottom of every page.
+`Footer`: Renders the Footer component, which stays static at the bottom of every page.
 
 In the context of React Router, the Layout component provides a persistent structure for your application. Regardless of the route (e.g., /about, /contact), the Header and Footer remain the same. The only part that changes is the content between them, which is dynamically replaced by the component matched to the current route (rendered in the Outlet).
 
