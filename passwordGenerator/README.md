@@ -1,4 +1,3 @@
-
 # Explanation of Hooks in the Password Generator Project
 
 This document explains how various React hooks ( `useCallback`, `useRef`, `useEffect`) are used in the password generator project.
