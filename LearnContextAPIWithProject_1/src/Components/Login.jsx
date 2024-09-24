@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState } from 'react'
+import UserContext from '../Context/UserContext'
 
 function Login() {
 
     const [Username, setUsername] = useState('')
     const [Password, setPassword] = useState('')
 
-    const handleSubmit = () => {
+    const {setUser} = useContext(UserContext)
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        setUser({Username,Password})
 
     }
 
@@ -23,7 +28,7 @@ function Login() {
                 onChange={(e) => { setPassword(e.target.value) }} />
 
             <div></div>
-            
+
             <button onClick={handleSubmit}>Submit</button>
         </div>
     )

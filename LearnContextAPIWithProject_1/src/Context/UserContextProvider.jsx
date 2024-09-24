@@ -8,7 +8,7 @@ const UserContextProvider=({children})=>{
 
     return(
         <UserContext.Provider value={{User,setUser}}>
-        {childern}
+        {children}
         </UserContext.Provider>
 
     )
