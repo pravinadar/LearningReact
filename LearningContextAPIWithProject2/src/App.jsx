@@ -16,6 +16,10 @@ function App() {
     document.querySelector('html').classList.add(themeMode)
   }, [themeMode])
 
+  // Once the themeMode changes to dark, the dark class is added to the <html> element. 
+  // This activates the Tailwind CSS classes that are prefixed with dark:, 
+  // such as dark:bg-gray-800 and dark:text-white, which change the background, text, and border colors of the card.
+
   const lightTheme = () => {
     setThemeMode("light")
   }
@@ -45,5 +49,6 @@ function App() {
 
   )
 }
+
 
 export default App
