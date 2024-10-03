@@ -35,6 +35,9 @@ This document outlines the structure of a React learning journey, organized into
 10. **LearningContextAPIWithProject_1**
     - State management using React's Context API
 
+11. **LearningContextAPIWithLocalStorageUse**
+    - State management using React's Context API along with learning how to use local storage functions
+
 ## Notes and Documentation
 
 Each project folder contains additional resources:
