@@ -172,13 +172,4 @@ function App() {
 export default App
 
 ```
-```jsx
-```
-```jsx
-```
-```jsx
-```
-```jsx
-```
-```jsx
-```
+checkout the codes in the actual files too
