@@ -22,5 +22,9 @@ Important points
     this is a good practice which should be followed because, sometimes problems can occur while parsing the environment variables so we make a different conf file and have all our important id's already parsed to strings before and then use them in our .env file
     checkout the file
 
+7. made the appwrite folder to keep all the appwrite related files
+(checkout good practices to avoid vendor lock-in. we'll be doing some of them here)
+    made the auth.js file in it and makde our authentication functions . check out the auth.js file
 
-
+8. made the config.js file in the appwrite folder. check it out
+read the docs and made the methods in the class which are pretty much understandable when read 
