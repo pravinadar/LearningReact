@@ -6,7 +6,7 @@ function AddTodo() {
 
     const [input, setInput] = useState('')
     const dispatch = useDispatch() // dispatch should be used this way
-    // useDispatch is a hook provided by the Redux library, specifically for use with 
+    // useDispatch is a hook provided by the Redux library, specifically to use with 
     // the react-redux package, to interact with the Redux store in a functional component. 
     // This hook returns a reference to the dispatch function from the Redux store, which 
     // allows you to send actions to modify the global state.

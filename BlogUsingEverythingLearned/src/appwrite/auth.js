@@ -27,7 +27,7 @@ export class AuthService {
             const userAccount = await this.account.create(ID.unique(), email, password, name)
 
             if (userAccount) {
-                return this.login({email,password})
+                return this.login({ email, password })
 
             } else {
                 return userAccount
@@ -45,20 +45,20 @@ export class AuthService {
         }
     }
 
-    async getCurrentUSer() {
+    async getCurrentUser() {
         try {
             return await this.account.get();
         } catch (error) {
-            console.log("Appwrite service :: getCurrentUSer :: error",error);
+            console.log("Appwrite service :: getCurrentUSer :: error", error);
         }
         return null;
     }
 
-    async logOut(){
+    async logOut() {
         try {
             await this.account.deleteSessions();
         } catch (error) {
-            throw(error);
+            throw (error);
         }
     }
 }
@@ -72,4 +72,4 @@ export class AuthService {
 const authService = new AuthService();
 
 
-export default AuthService;
+export default authService;
