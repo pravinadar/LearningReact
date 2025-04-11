@@ -4,8 +4,6 @@
 
 This document outlines the structure of a React learning journey, organized into a series of projects. Each project focuses on different aspects of React development, progressively building knowledge and skills.
 
-## Project Structure
-
 1. **react-one**  
    _Introduction to React basics_
 
