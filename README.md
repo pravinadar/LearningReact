@@ -32,11 +32,20 @@ This document outlines the structure of a React learning journey, organized into
 9. **LearningRoutingWithProject**
    - Implementing navigation in React applications
 
-10. **LearningContextAPIWithProject_1**
+10. **LearnContextAPIWithProject_1**
     - State management using React's Context API
 
 11. **LearningContextAPIWithLocalStorageUse**
     - State management using React's Context API along with learning how to use local storage functions
+
+12. **LearningContextAPIWithProject2**
+    - Advanced state management using Context API in a larger project
+
+13. **LearningReduxToolkitWithReact**
+    - Managing state with Redux Toolkit in React applications
+
+14. **BlogUsingEverythingLearned**
+    - A comprehensive blog project integrating all learned concepts
 
 ## Notes and Documentation
 
