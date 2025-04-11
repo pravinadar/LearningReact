@@ -1,10 +1,10 @@
 import React from 'react'
 
 function SelectComponent({
-    option,
-    label,
-    className = "",
-    ...props
+  options,
+  label,
+  className = "",
+  ...props
 }, ref) {
   const id = useId();
   return (
@@ -17,10 +17,16 @@ function SelectComponent({
           ref={ref}
           id={id}
         >
+          {options?.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
         </select>
       </div>
     </div>
   )
 }
 
-export default SelectComponent
+export default React.forwardRef(SelectComponent)
+// method 2 for forwardRef
