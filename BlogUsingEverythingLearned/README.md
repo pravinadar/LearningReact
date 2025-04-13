@@ -983,4 +983,317 @@ When you submit, it automatically:
 Let me know if you want me to show the internal shape of what `useForm()` is storing, or build a small demo-style code to show everything in action with validation and errors.
 
 ## 23. Made Signup.jsx
+SignUp.jsx
+```jsx
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import authService from '../appwrite/auth'
+import { Button, Input, Logo } from '../components/index.js'
+import { useForm } from 'react-hook-form'
+import { login } from '../store/authSlice.js'
+import { useDispatch } from 'react-redux'
+
+function SignUp() {
+    const { register, handleSubmit } = useForm()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [error, setError] = useState("")
+
+    const create = async (data) => {
+        setError("")
+        try {
+            const userData = await authService.createAccount(data)
+            if (userData) {
+                const currentUser = await authService.getCurrentUser();
+                if (currentUser) {
+                    dispatch(login(currentUser))
+                }
+                navigate("/");
+            }
+
+        }
+        catch (error) {
+            setError(error.message)
+        }
+    }
+
+    return (
+        <div className="flex items-center justify-center">
+            <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
+                <div className="mb-2 flex justify-center">
+                    <span className="inline-block w-full max-w-[100px]">
+                        <Logo width="100%" />
+                    </span>
+                </div>
+                <h2 className="text-center text-2xl font-bold leading-tight">Sign up to create account</h2>
+                <p className="mt-2 text-center text-base text-black/60">
+                    Already have an account?&nbsp;
+                    <Link
+                        to="/login"
+                        className="font-medium text-primary transition-all duration-200 hover:underline"
+                    >
+                        Sign In
+                    </Link>
+                </p>
+                {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+
+                <form onSubmit={handleSubmit(create)}>
+                    <div className='space-y-5'>
+                        <Input
+                            label="Full Name: "
+                            placeholder="Enter your full name"
+                            {...register("name", {      // important to understand how this works
+                                required: true,         // important syntax to understand
+                            })}
+                        />
+                        <Input
+                            label="Email: "
+                            placeholder="Enter your email"
+                            type="email"
+                            {...register("email", {
+                                required: true,
+                                validate: {
+                                    matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                                        "Email address must be a valid address",
+                                }
+                            })}
+                        />
+                        <Input
+                            label="Password: "
+                            type="password"
+                            placeholder="Enter your password"
+                            {...register("password", {
+                                required: true,
+                            })}
+                        />
+                        <Button type="submit" className="w-full">
+                            Create Account
+                        </Button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    )
+}
+
+export default SignUp
+
+// 1. Clears any previous error messages by calling setError("").
+// 2. Calls authService.createAccount(data) to create a new account.
+// 3. If successful:
+//      - Fetches the current user using authService.getCurrentUser().
+//      - Dispatches the login action to update the Redux store with the current user's data.
+//      - Navigates to the home page ("/") using navigate.
+// 4. If an error occurs, it catches the error and updates the error state with the error message.
+
+
+// Flow of Data
+// 1. User Input:
+//      - The user enters their full name, email, and password into the form fields.
+//      - The register function binds these inputs to the form state.
+// 2. Form Submission:
+//      - When the user clicks the "Create Account" button, the handleSubmit function validates the inputs and calls the create function with the form data.
+// 3. Account Creation:
+//      - The create function sends the form data to authService.createAccount.
+//      - If successful, it fetches the current user and updates the Redux store using the login action.
+// 4. Error Handling:
+//      - If an error occurs during account creation, the error message is stored in the error state and displayed to the user.
+// 5. Navigation:
+//      - Upon successful account creation, the user is redirected to the home page.
+```
+
 ## 24. Made AuthLayout.jsx
+
+AuthLayout.jsx
+
+```jsx
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+
+export default function Protected({ children, authentication = true }) {
+
+    const navigate = useNavigate()
+    const [loader, setLoader] = useState(true)
+    const authStatus = useSelector(state => state.auth.status)
+
+    useEffect(() => {
+        //TODO: make it more easy to understand
+
+        // if (authStatus ===true){
+        //     navigate("/")
+        // } else if (authStatus === false) {
+        //     navigate("/login")
+        // }
+
+        //let authValue = authStatus === true ? true : false
+
+        if (authentication && (authStatus !== authentication)) {
+            navigate("/login")
+        } else if (!authentication && authStatus !== authentication) {
+            navigate("/")
+        }
+        setLoader(false)
+    }, [authStatus, navigate, authentication])
+
+    return loader ? <h1>Loading...</h1> : <>{children}</>
+}
+
+// The AuthLayout.jsx component, also referred to as Protected, is a React functional component 
+// designed to act as a route guard. It ensures that only authenticated or unauthenticated users 
+// can access specific routes/pages in the application. This is similar to private routes in applications 
+// like Gmail or Instagram, where access to certain pages is restricted based on the user's authentication status.
+
+// Component Purpose
+// 1. Protects Routes:
+//      - Ensures that only authenticated users can access certain routes (e.g., dashboard, profile).
+//      - Redirects unauthenticated users to the login page.
+//      - Optionally, it can also restrict authenticated users from accessing routes meant for unauthenticated users (e.g., signup or login pages).
+// 2. Handles Loading State:
+//      - Displays a loading indicator (<h1>Loading...</h1>) while determining the user's authentication status.
+// 3. Redirects Users:
+//      - Redirects users to appropriate routes (/login or /) based on their authentication status and the authentication prop.
+```
+Flow of Data
+
+1. Authentication Status:
+- The authStatus is fetched from the Redux store using useSelector.
+- This value determines whether the user is logged in (true) or logged out (false).
+2. Route Protection:
+- The authentication prop specifies whether the route is for authenticated (true) or unauthenticated (false) users.
+- Based on the authStatus and authentication values:
+  - If the user is not allowed to access the route, they are redirected to /login or /.
+3. Navigation:
+- The useNavigate hook is used to programmatically redirect users to the appropriate route.
+4. Rendering:
+- While the authentication check is in progress (loader is true), a loading message is displayed.
+- Once the check is complete, the children (wrapped content) are rendered if the user passes the authentication check.
+
+**Integration with Other Components**
+1. Redux Store
+- The authStatus is managed in the Redux store via the authSlice reducer (src/store/authSlice.js):
+```jsx
+const initialState = {
+    status: false, // Indicates whether the user is authenticated
+    userData: null // Stores user data
+};
+```
+- The login and logout actions update the authStatus in the store.
+
+2. Navigation
+- The useNavigate hook is used to redirect users:
+  - To /login if they are unauthenticated but trying to access a protected route.
+  - To / if they are authenticated but trying to access a public route (e.g., login or signup).
+
+3. Usage in Routes
+- The AuthLayout.jsx component is typically used to wrap routes in the application's routing configuration. For example:
+```jsx
+<Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
+<Route path="/login" element={<Protected authentication={false}><Login /></Protected>} />
+```
+
+## 25. Made RTE.jsx
+
+RTE.jsx
+
+```jsx
+import React from "react";
+import { Editor } from "@tinymce/tinymce-react";
+import { Controller } from "react-hook-form";
+
+export default function RTE({ name, control, label, defaultValue = "" }) {
+  return (
+    <div className="w-full">
+      {label && <label className="inline-block mb-1 pl-1">{label}</label>}
+
+      <Controller
+        name={name || "content"}
+        control={control}
+        render={({ field: { onChange } }) => (
+          <Editor
+            initialValue={defaultValue}
+            init={{
+              initialValue: defaultValue,
+              height: 500,
+              menubar: true,
+              plugins: [
+                "image",
+                "advlist",
+                "autolink",
+                "lists",
+                "link",
+                "image",
+                "charmap",
+                "preview",
+                "anchor",
+                "searchreplace",
+                "visualblocks",
+                "code",
+                "fullscreen",
+                "insertdatetime",
+                "media",
+                "table",
+                "code",
+                "help",
+                "wordcount",
+                "anchor",
+              ],
+              toolbar:
+                "undo redo | blocks | image | bold italic forecolor | alignleft aligncenter bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |removeformat | help",
+              content_style:
+                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+            }}
+            onEditorChange={onChange}
+          />
+        )}
+      />
+    </div>
+  );
+}
+```
+The Controller component from react-hook-form is a wrapper that allows you to integrate non-standard input components (like the Editor from @tinymce/tinymce-react) with react-hook-form. It acts as a bridge between the form state managed by react-hook-form and the custom input component.
+
+**What the Controller Does**
+1. Manages Form State:
+The Controller ensures that the value of the custom input component is synchronized with the form state managed by react-hook-form.
+2. Handles Value Changes:
+It listens for changes in the custom input component (via the onChange callback) and updates the form state accordingly.
+3. Validation:
+The Controller can also handle validation rules for the custom input, just like standard inputs.
+4. Reusability:
+By using Controller, you can easily integrate any third-party or custom input component into your form without manually managing its state.
+
+How It Works in RTE.jsx
+```jsx
+<Controller
+    name={name || "content"} // The name of the field in the form state
+    control={control} // The control object from react-hook-form
+    render={({ field: { onChange } }) => (
+        <Editor
+            initialValue={defaultValue} // Sets the initial value of the editor
+            init={{ /* Editor configuration */ }}
+            onEditorChange={onChange} // Updates the form state when the editor content changes
+        />
+    )}
+/>
+```
+In the RTE.jsx component, the Controller is used to manage the value of the Editor component:
+- name: Specifies the name of the field in the form state (e.g., "content").
+- control: The control object from react-hook-form that manages the form state.
+- render: A function that renders the custom input component (Editor in this case) and connects it to the form state.
+
+**Flow of Data**
+1. Initialization:
+The Controller initializes the Editor with the defaultValue and connects it to the form state.
+2. User Interaction:
+When the user types or formats text in the Editor, the onEditorChange callback is triggered.
+3. Form State Update:
+The onChange function provided by the Controller updates the form state with the new content from the Editor.
+4. Form Submission:
+When the form is submitted, the content of the Editor is included in the form data under the field name specified by the name prop.
+
+**Why Use Controller?**
+Without Controller, you would need to manually manage the state of the Editor and synchronize it with the form state. The Controller simplifies this process by handling the integration for you, making the code cleaner and easier to maintain.
+
+## 26. Made PostForm.jsx in the PostForm folder

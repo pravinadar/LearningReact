@@ -91,3 +91,26 @@ function SignUp() {
 }
 
 export default SignUp
+
+// 1. Clears any previous error messages by calling setError("").
+// 2. Calls authService.createAccount(data) to create a new account.
+// 3. If successful:
+//      - Fetches the current user using authService.getCurrentUser().
+//      - Dispatches the login action to update the Redux store with the current user's data.
+//      - Navigates to the home page ("/") using navigate.
+// 4. If an error occurs, it catches the error and updates the error state with the error message.
+
+
+// Flow of Data
+// 1. User Input:
+//      - The user enters their full name, email, and password into the form fields.
+//      - The register function binds these inputs to the form state.
+// 2. Form Submission:
+//      - When the user clicks the "Create Account" button, the handleSubmit function validates the inputs and calls the create function with the form data.
+// 3. Account Creation:
+//      - The create function sends the form data to authService.createAccount.
+//      - If successful, it fetches the current user and updates the Redux store using the login action.
+// 4. Error Handling:
+//      - If an error occurs during account creation, the error message is stored in the error state and displayed to the user.
+// 5. Navigation:
+//      - Upon successful account creation, the user is redirected to the home page.

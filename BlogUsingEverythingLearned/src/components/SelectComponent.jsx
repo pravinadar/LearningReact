@@ -29,4 +29,4 @@ function SelectComponent({
 }
 
 export default React.forwardRef(SelectComponent)
-// method 2 for forwardRef
+//This is another method to use forwardRef

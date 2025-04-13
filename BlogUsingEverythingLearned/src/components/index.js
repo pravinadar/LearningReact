@@ -3,8 +3,10 @@ import Footer from "./Footer/Footer";
 import LogoutButton from "./Header/LogoutButton";
 import Logo from "./Logo";
 import Container from "./container/container";
+import { Input } from "./Input";
 import Button from "./button";
-import Input from "./input";
+import SelectComponent from "./SelectComponent";
+import RTE from "./RTE";
 
 export {
     Header,
@@ -13,5 +15,7 @@ export {
     Logo,
     Container,
     Button,
-    Input
+    Input,
+    SelectComponent,
+    RTE
 };
