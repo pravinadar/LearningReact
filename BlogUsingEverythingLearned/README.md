@@ -160,7 +160,49 @@ read the docs and made the methods in the class which are pretty much understand
 
 ## 9. made the store folder and made store.js in it
 
+store.js for now
+
+```jsx
+import { configureStore } from "@reduxjs/toolkit";
+
+const store = configureStore({
+  reducer: {},
+});
+
+export default store;
+```
+
 ## 10. made the authSlice.js in the store folder. Could make it in a separate folder for features.
+
+authSlice.js
+
+```js
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  status: false,
+  userData: null,
+};
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    login: (state, action) => {
+      state.status = true;
+      state.userData = action.payload.userData;
+    },
+    logout: (state) => {
+      state.status = false;
+      state.userData = null;
+    },
+  },
+});
+
+export const { login, logout } = authSlice.actions;
+
+export default authSlice.reducer;
+```
 
 ## 11. Made Header and Footer (just skeleton) and exported them from the index file in components
 
@@ -226,6 +268,18 @@ createRoot(document.getElementById("root")).render(
 ```
 
 ## 14. Made Container.jsx in the container folder to keep everything in it. so in the future if any width or aspect ratio stuff needs to be changed it can be changed easily
+
+Container.jsx
+
+```jsx
+import React from "react";
+
+function Container({ children }) {
+  return <div className="w-full max-w-7xl mx-auto px-4">{children}</div>;
+}
+
+export default Container;
+```
 
 ## 15. Made the Logo.jsx which is imported in the footer
 
@@ -811,3 +865,122 @@ And then:
   errors.email && <p className="text-red-500">{errors.email.message}</p>;
 }
 ```
+
+### ✅ YES — `handleSubmit()` Validates Inputs Automatically.
+
+But **how** does it know _what_ to validate?
+
+#### 👉 The magic happens inside `register(...)`.
+
+When you do this:
+
+```js
+<Input
+  label="Email"
+  type="email"
+  placeholder="Enter your email"
+  {...register("email", {
+    required: true,
+    validate: {
+      matchPatern: (value) =>
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+        "Email address must be a valid address",
+    },
+  })}
+/>
+```
+
+Here’s what’s really going on:
+
+---
+
+#### 🔍 Step-by-Step Breakdown
+
+##### 🧠 1. `register("email", { rules })` does 3 things:
+
+- **Assigns a name** to this field → `"email"`
+- **Attaches validation rules** → like `required`, `validate`
+- **Returns an object** with:
+  - `onChange`, `onBlur`, `ref`, etc.
+  - These connect the input to the internal form state.
+
+That object is spread into your `<Input />`, which ultimately spreads them into an `<input>` HTML element.
+
+---
+
+##### 🧬 2. Behind the scenes...
+
+React Hook Form keeps a list of all `register(...)`ed fields and their validation rules.
+
+Something like:
+
+```js
+{
+  email: {
+    required: true,
+    validate: { matchPattern: yourFunction },
+    ref: inputElement
+  },
+  password: {
+    required: true,
+    ref: inputElement
+  }
+}
+```
+
+So now, it **knows:**
+
+- What your input fields are
+- What their names are
+- What validations to apply
+- Where their DOM refs are
+
+---
+
+##### ✅ 3. `handleSubmit(yourFunction)` uses that list:
+
+- On form submit (`<form onSubmit={handleSubmit(login)}>`)
+  - It:
+    - Prevents the default submit
+    - Grabs values from all `ref`s
+    - Validates each value according to the rules
+    - If all valid → calls your `login(data)`
+    - If not → stores errors and prevents calling your function
+
+---
+
+##### 🚀 So how does it know your inputs?
+
+✔️ Because **you used `register("inputName", rules)`**, which:
+
+- Registered the input
+- Connected it via a `ref`
+- Added validation logic
+
+This is why **`register(...)` is required** — without it, `react-hook-form` doesn’t track that input at all.
+
+---
+
+#### 🧠 Example Mental Model
+
+```jsx
+const { register, handleSubmit } = useForm()
+
+<form onSubmit={handleSubmit(onSubmit)}>
+  <input {...register("email", { required: true })} />
+</form>
+```
+
+`useForm` is now watching `email`.  
+When you submit, it automatically:
+
+- Reads the value from the input
+- Applies validation rules
+- Calls your function if everything is valid
+
+---
+
+Let me know if you want me to show the internal shape of what `useForm()` is storing, or build a small demo-style code to show everything in action with validation and errors.
+
+## 23. Made Signup.jsx
+## 24. Made AuthLayout.jsx
