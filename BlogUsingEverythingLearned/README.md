@@ -983,101 +983,106 @@ When you submit, it automatically:
 Let me know if you want me to show the internal shape of what `useForm()` is storing, or build a small demo-style code to show everything in action with validation and errors.
 
 ## 23. Made Signup.jsx
+
 SignUp.jsx
+
 ```jsx
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import authService from '../appwrite/auth'
-import { Button, Input, Logo } from '../components/index.js'
-import { useForm } from 'react-hook-form'
-import { login } from '../store/authSlice.js'
-import { useDispatch } from 'react-redux'
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import authService from "../appwrite/auth";
+import { Button, Input, Logo } from "../components/index.js";
+import { useForm } from "react-hook-form";
+import { login } from "../store/authSlice.js";
+import { useDispatch } from "react-redux";
 
 function SignUp() {
-    const { register, handleSubmit } = useForm()
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const [error, setError] = useState("")
+  const { register, handleSubmit } = useForm();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
 
-    const create = async (data) => {
-        setError("")
-        try {
-            const userData = await authService.createAccount(data)
-            if (userData) {
-                const currentUser = await authService.getCurrentUser();
-                if (currentUser) {
-                    dispatch(login(currentUser))
-                }
-                navigate("/");
-            }
-
+  const create = async (data) => {
+    setError("");
+    try {
+      const userData = await authService.createAccount(data);
+      if (userData) {
+        const currentUser = await authService.getCurrentUser();
+        if (currentUser) {
+          dispatch(login(currentUser));
         }
-        catch (error) {
-            setError(error.message)
-        }
+        navigate("/");
+      }
+    } catch (error) {
+      setError(error.message);
     }
+  };
 
-    return (
-        <div className="flex items-center justify-center">
-            <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
-                <div className="mb-2 flex justify-center">
-                    <span className="inline-block w-full max-w-[100px]">
-                        <Logo width="100%" />
-                    </span>
-                </div>
-                <h2 className="text-center text-2xl font-bold leading-tight">Sign up to create account</h2>
-                <p className="mt-2 text-center text-base text-black/60">
-                    Already have an account?&nbsp;
-                    <Link
-                        to="/login"
-                        className="font-medium text-primary transition-all duration-200 hover:underline"
-                    >
-                        Sign In
-                    </Link>
-                </p>
-                {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
-
-                <form onSubmit={handleSubmit(create)}>
-                    <div className='space-y-5'>
-                        <Input
-                            label="Full Name: "
-                            placeholder="Enter your full name"
-                            {...register("name", {      // important to understand how this works
-                                required: true,         // important syntax to understand
-                            })}
-                        />
-                        <Input
-                            label="Email: "
-                            placeholder="Enter your email"
-                            type="email"
-                            {...register("email", {
-                                required: true,
-                                validate: {
-                                    matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                                        "Email address must be a valid address",
-                                }
-                            })}
-                        />
-                        <Input
-                            label="Password: "
-                            type="password"
-                            placeholder="Enter your password"
-                            {...register("password", {
-                                required: true,
-                            })}
-                        />
-                        <Button type="submit" className="w-full">
-                            Create Account
-                        </Button>
-                    </div>
-                </form>
-            </div>
-
+  return (
+    <div className="flex items-center justify-center">
+      <div
+        className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}
+      >
+        <div className="mb-2 flex justify-center">
+          <span className="inline-block w-full max-w-[100px]">
+            <Logo width="100%" />
+          </span>
         </div>
-    )
+        <h2 className="text-center text-2xl font-bold leading-tight">
+          Sign up to create account
+        </h2>
+        <p className="mt-2 text-center text-base text-black/60">
+          Already have an account?&nbsp;
+          <Link
+            to="/login"
+            className="font-medium text-primary transition-all duration-200 hover:underline"
+          >
+            Sign In
+          </Link>
+        </p>
+        {error && <p className="text-red-600 mt-8 text-center">{error}</p>}
+
+        <form onSubmit={handleSubmit(create)}>
+          <div className="space-y-5">
+            <Input
+              label="Full Name: "
+              placeholder="Enter your full name"
+              {...register("name", {
+                // important to understand how this works
+                required: true, // important syntax to understand
+              })}
+            />
+            <Input
+              label="Email: "
+              placeholder="Enter your email"
+              type="email"
+              {...register("email", {
+                required: true,
+                validate: {
+                  matchPatern: (value) =>
+                    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                    "Email address must be a valid address",
+                },
+              })}
+            />
+            <Input
+              label="Password: "
+              type="password"
+              placeholder="Enter your password"
+              {...register("password", {
+                required: true,
+              })}
+            />
+            <Button type="submit" className="w-full">
+              Create Account
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 }
 
-export default SignUp
+export default SignUp;
 
 // 1. Clears any previous error messages by calling setError("").
 // 2. Calls authService.createAccount(data) to create a new account.
@@ -1086,7 +1091,6 @@ export default SignUp
 //      - Dispatches the login action to update the Redux store with the current user's data.
 //      - Navigates to the home page ("/") using navigate.
 // 4. If an error occurs, it catches the error and updates the error state with the error message.
-
 
 // Flow of Data
 // 1. User Input:
@@ -1108,41 +1112,40 @@ export default SignUp
 AuthLayout.jsx
 
 ```jsx
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Protected({ children, authentication = true }) {
+  const navigate = useNavigate();
+  const [loader, setLoader] = useState(true);
+  const authStatus = useSelector((state) => state.auth.status);
 
-    const navigate = useNavigate()
-    const [loader, setLoader] = useState(true)
-    const authStatus = useSelector(state => state.auth.status)
+  useEffect(() => {
+    //TODO: make it more easy to understand
 
-    useEffect(() => {
-        //TODO: make it more easy to understand
+    // if (authStatus ===true){
+    //     navigate("/")
+    // } else if (authStatus === false) {
+    //     navigate("/login")
+    // }
 
-        // if (authStatus ===true){
-        //     navigate("/")
-        // } else if (authStatus === false) {
-        //     navigate("/login")
-        // }
+    //let authValue = authStatus === true ? true : false
 
-        //let authValue = authStatus === true ? true : false
+    if (authentication && authStatus !== authentication) {
+      navigate("/login");
+    } else if (!authentication && authStatus !== authentication) {
+      navigate("/");
+    }
+    setLoader(false);
+  }, [authStatus, navigate, authentication]);
 
-        if (authentication && (authStatus !== authentication)) {
-            navigate("/login")
-        } else if (!authentication && authStatus !== authentication) {
-            navigate("/")
-        }
-        setLoader(false)
-    }, [authStatus, navigate, authentication])
-
-    return loader ? <h1>Loading...</h1> : <>{children}</>
+  return loader ? <h1>Loading...</h1> : <>{children}</>;
 }
 
-// The AuthLayout.jsx component, also referred to as Protected, is a React functional component 
-// designed to act as a route guard. It ensures that only authenticated or unauthenticated users 
-// can access specific routes/pages in the application. This is similar to private routes in applications 
+// The AuthLayout.jsx component, also referred to as Protected, is a React functional component
+// designed to act as a route guard. It ensures that only authenticated or unauthenticated users
+// can access specific routes/pages in the application. This is similar to private routes in applications
 // like Gmail or Instagram, where access to certain pages is restricted based on the user's authentication status.
 
 // Component Purpose
@@ -1155,39 +1158,54 @@ export default function Protected({ children, authentication = true }) {
 // 3. Redirects Users:
 //      - Redirects users to appropriate routes (/login or /) based on their authentication status and the authentication prop.
 ```
+
 Flow of Data
 
 1. Authentication Status:
+
 - The authStatus is fetched from the Redux store using useSelector.
 - This value determines whether the user is logged in (true) or logged out (false).
+
 2. Route Protection:
+
 - The authentication prop specifies whether the route is for authenticated (true) or unauthenticated (false) users.
 - Based on the authStatus and authentication values:
   - If the user is not allowed to access the route, they are redirected to /login or /.
+
 3. Navigation:
+
 - The useNavigate hook is used to programmatically redirect users to the appropriate route.
+
 4. Rendering:
+
 - While the authentication check is in progress (loader is true), a loading message is displayed.
 - Once the check is complete, the children (wrapped content) are rendered if the user passes the authentication check.
 
 **Integration with Other Components**
+
 1. Redux Store
+
 - The authStatus is managed in the Redux store via the authSlice reducer (src/store/authSlice.js):
+
 ```jsx
 const initialState = {
-    status: false, // Indicates whether the user is authenticated
-    userData: null // Stores user data
+  status: false, // Indicates whether the user is authenticated
+  userData: null, // Stores user data
 };
 ```
+
 - The login and logout actions update the authStatus in the store.
 
 2. Navigation
+
 - The useNavigate hook is used to redirect users:
   - To /login if they are unauthenticated but trying to access a protected route.
   - To / if they are authenticated but trying to access a public route (e.g., login or signup).
 
 3. Usage in Routes
+
 - The AuthLayout.jsx component is typically used to wrap routes in the application's routing configuration. For example:
+
 ```jsx
 <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
 <Route path="/login" element={<Protected authentication={false}><Login /></Protected>} />
@@ -1252,48 +1270,424 @@ export default function RTE({ name, control, label, defaultValue = "" }) {
   );
 }
 ```
+
 The Controller component from react-hook-form is a wrapper that allows you to integrate non-standard input components (like the Editor from @tinymce/tinymce-react) with react-hook-form. It acts as a bridge between the form state managed by react-hook-form and the custom input component.
 
 **What the Controller Does**
+
 1. Manages Form State:
-The Controller ensures that the value of the custom input component is synchronized with the form state managed by react-hook-form.
+   The Controller ensures that the value of the custom input component is synchronized with the form state managed by react-hook-form.
 2. Handles Value Changes:
-It listens for changes in the custom input component (via the onChange callback) and updates the form state accordingly.
+   It listens for changes in the custom input component (via the onChange callback) and updates the form state accordingly.
 3. Validation:
-The Controller can also handle validation rules for the custom input, just like standard inputs.
+   The Controller can also handle validation rules for the custom input, just like standard inputs.
 4. Reusability:
-By using Controller, you can easily integrate any third-party or custom input component into your form without manually managing its state.
+   By using Controller, you can easily integrate any third-party or custom input component into your form without manually managing its state.
 
 How It Works in RTE.jsx
+
 ```jsx
 <Controller
-    name={name || "content"} // The name of the field in the form state
-    control={control} // The control object from react-hook-form
-    render={({ field: { onChange } }) => (
-        <Editor
-            initialValue={defaultValue} // Sets the initial value of the editor
-            init={{ /* Editor configuration */ }}
-            onEditorChange={onChange} // Updates the form state when the editor content changes
-        />
-    )}
+  name={name || "content"} // The name of the field in the form state
+  control={control} // The control object from react-hook-form
+  render={({ field: { onChange } }) => (
+    <Editor
+      initialValue={defaultValue} // Sets the initial value of the editor
+      init={
+        {
+          /* Editor configuration */
+        }
+      }
+      onEditorChange={onChange} // Updates the form state when the editor content changes
+    />
+  )}
 />
 ```
+
 In the RTE.jsx component, the Controller is used to manage the value of the Editor component:
+
 - name: Specifies the name of the field in the form state (e.g., "content").
 - control: The control object from react-hook-form that manages the form state.
 - render: A function that renders the custom input component (Editor in this case) and connects it to the form state.
 
 **Flow of Data**
+
 1. Initialization:
-The Controller initializes the Editor with the defaultValue and connects it to the form state.
+   The Controller initializes the Editor with the defaultValue and connects it to the form state.
 2. User Interaction:
-When the user types or formats text in the Editor, the onEditorChange callback is triggered.
+   When the user types or formats text in the Editor, the onEditorChange callback is triggered.
 3. Form State Update:
-The onChange function provided by the Controller updates the form state with the new content from the Editor.
+   The onChange function provided by the Controller updates the form state with the new content from the Editor.
 4. Form Submission:
-When the form is submitted, the content of the Editor is included in the form data under the field name specified by the name prop.
+   When the form is submitted, the content of the Editor is included in the form data under the field name specified by the name prop.
 
 **Why Use Controller?**
 Without Controller, you would need to manually manage the state of the Editor and synchronize it with the form state. The Controller simplifies this process by handling the integration for you, making the code cleaner and easier to maintain.
 
 ## 26. Made PostForm.jsx in the PostForm folder
+
+PostFprm.jsx
+
+```jsx
+import React, { useCallback } from "react";
+import { useForm } from "react-hook-form";
+import { Button, Input, RTE, Select } from "..";
+import appwriteService from "../../appwrite/config";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+export default function PostForm({ post }) {
+  const { register, handleSubmit, watch, setValue, control, getValues } =
+    useForm({
+      defaultValues: {
+        title: post?.title || "",
+        slug: post?.$id || "",
+        content: post?.content || "",
+        status: post?.status || "active",
+      },
+    });
+
+  const navigate = useNavigate();
+  const userData = useSelector((state) => state.auth.userData);
+
+  const submit = async (data) => {
+    if (post) {
+      const file = data.image[0]
+        ? await appwriteService.uploadFile(data.image[0])
+        : null;
+
+      if (file) {
+        appwriteService.deleteFile(post.featuredImage);
+      }
+
+      const dbPost = await appwriteService.updatePost(post.$id, {
+        ...data,
+        featuredImage: file ? file.$id : undefined,
+      });
+
+      if (dbPost) {
+        navigate(`/post/${dbPost.$id}`);
+      }
+    } else {
+      const file = await appwriteService.uploadFile(data.image[0]);
+
+      if (file) {
+        const fileId = file.$id;
+        data.featuredImage = fileId;
+        const dbPost = await appwriteService.createPost({
+          ...data,
+          userId: userData.$id,
+        });
+
+        if (dbPost) {
+          navigate(`/post/${dbPost.$id}`);
+        }
+      }
+    }
+  };
+
+  const slugTransform = useCallback((value) => {
+    if (value && typeof value === "string")
+      return value
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-zA-Z\d\s]+/g, "-")
+        .replace(/\s/g, "-");
+
+    return "";
+  }, []);
+
+  React.useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      if (name === "title") {
+        setValue("slug", slugTransform(value.title), { shouldValidate: true });
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch, slugTransform, setValue]);
+
+  return (
+    <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
+      <div className="w-2/3 px-2">
+        <Input
+          label="Title :"
+          placeholder="Title"
+          className="mb-4"
+          {...register("title", { required: true })}
+        />
+        <Input
+          label="Slug :"
+          placeholder="Slug"
+          className="mb-4"
+          {...register("slug", { required: true })}
+          onInput={(e) => {
+            setValue("slug", slugTransform(e.currentTarget.value), {
+              shouldValidate: true,
+            });
+          }}
+        />
+        <RTE
+          label="Content :"
+          name="content"
+          control={control}
+          defaultValue={getValues("content")}
+        />
+      </div>
+      <div className="w-1/3 px-2">
+        <Input
+          label="Featured Image :"
+          type="file"
+          className="mb-4"
+          accept="image/png, image/jpg, image/jpeg, image/gif"
+          {...register("image", { required: !post })}
+        />
+        {post && (
+          <div className="w-full mb-4">
+            <img
+              src={appwriteService.getFilePreview(post.featuredImage)}
+              alt={post.title}
+              className="rounded-lg"
+            />
+          </div>
+        )}
+        <Select
+          options={["active", "inactive"]}
+          label="Status"
+          className="mb-4"
+          {...register("status", { required: true })}
+        />
+        <Button
+          type="submit"
+          bgColor={post ? "bg-green-500" : undefined}
+          className="w-full"
+        >
+          {post ? "Update" : "Submit"}
+        </Button>
+      </div>
+    </form>
+  );
+}
+```
+
+### 🔧 `PostForm` Component — Purpose
+
+This component is a **blog post creation and editing form**.
+
+- If `post` prop is passed → it edits the existing post.
+- If `post` is not passed → it creates a new post.
+
+It handles:
+
+- Uploading an image,
+- Setting a post title, slug, content, and status,
+- Automatically generating a **slug** from the **title**,
+- Submitting to Appwrite DB,
+- Navigating to the post after submission.
+
+---
+
+### 🧠 `useForm()` – What is it?
+
+#### **Import**
+
+```js
+import { useForm } from "react-hook-form";
+```
+
+#### **Purpose**
+
+`useForm()` is a hook from `react-hook-form` that:
+
+- Manages all your input values,
+- Handles validation,
+- Tracks touched/dirty fields,
+- Makes form submission easier and more performant (no re-renders on every keystroke).
+
+---
+
+### 🧰 Breakdown of `useForm()` return values
+
+```js
+const {
+  register,        // connects input fields to form
+  handleSubmit,    // wraps your submit function
+  watch,           // watches fields for changes
+  setValue,        // programmatically sets field value
+  control,         // used for controlled components (like RTE)
+  getValues        // get current values from the form
+} = useForm({ ... });
+```
+
+---
+
+#### ✅ `register`
+
+```js
+{...register("title", { required: true })}
+```
+
+This binds an input field to the form state so `react-hook-form` can:
+
+- Track its value,
+- Apply validation rules,
+- Include it in the final `data` on submission.
+
+---
+
+#### ✅ `handleSubmit`
+
+```js
+<form onSubmit={handleSubmit(submit)} >
+```
+
+- Takes your own `submit` function and adds internal form validation to it.
+- If all fields are valid, it passes the form data to your function.
+
+---
+
+#### ✅ `watch`
+
+```js
+const subscription = watch((value, { name }) => { ... });
+```
+
+- **Watches fields for changes**
+- When a change is detected, it returns:
+  - `value` → the new values of the form,
+  - `name` → the name of the field that changed.
+
+> In this form, we’re watching for changes to `"title"` so we can auto-update the `"slug"`.
+
+---
+
+#### ✅ `setValue`
+
+```js
+setValue("slug", slugTransform(value.title), { shouldValidate: true });
+```
+
+Programmatically updates the value of a field (in this case, `"slug"`), and optionally triggers validation.
+
+---
+
+#### ✅ `control`
+
+Used for custom or **controlled components** like `RTE` that don’t work directly with `register`.
+
+---
+
+#### ✅ `getValues`
+
+```js
+getValues("content");
+```
+
+Returns the current value of a field without needing to listen for changes.
+
+---
+
+### 🔄 `slugTransform()` — What does it do?
+
+```js
+const slugTransform = useCallback((value) => {
+  if (value && typeof value === "string") {
+    return value
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-zA-Z\d\s]+/g, "-") // Replace special chars with "-"
+      .replace(/\s/g, "-"); // Replace spaces with "-"
+  }
+  return "";
+}, []);
+```
+
+#### 🔎 Purpose:
+
+Transforms a string (usually the title) into a **slug**:
+
+- `Hello World!` → `hello-world`
+- ` My Post @2023 ` → `my-post-2023`
+
+It's wrapped in `useCallback` to memoize it and avoid recreating the function on every render.
+
+---
+
+### 🔔 `watch()` Subscription
+
+```js
+React.useEffect(() => {
+  const subscription = watch((value, { name }) => {
+    if (name === "title") {
+      setValue("slug", slugTransform(value.title), { shouldValidate: true });
+    }
+  });
+
+  return () => subscription.unsubscribe();
+}, [watch, slugTransform, setValue]);
+```
+
+#### 🔎 Purpose:
+
+Whenever the `"title"` input changes:
+
+- The form **watches** it,
+- **Auto-generates the slug** using `slugTransform`,
+- **Updates the `"slug"` field**.
+
+This is very user-friendly: no need to manually type slugs.
+
+---
+
+#### 📦 `async submit()` Function
+
+```js
+const submit = async (data) => {
+```
+
+This is the **main form handler** triggered on submit.
+
+---
+
+#### 📍 If `post` exists → UPDATE Mode:
+
+```js
+if (post) {
+  const file = data.image[0]
+    ? await appwriteService.uploadFile(data.image[0])
+    : null;
+
+  if (file) {
+    appwriteService.deleteFile(post.featuredImage); // Remove old image
+  }
+
+  const dbPost = await appwriteService.updatePost(post.$id, {
+    ...data,
+    featuredImage: file ? file.$id : undefined,
+  });
+
+  if (dbPost) {
+    navigate(`/post/${dbPost.$id}`);
+  }
+}
+```
+
+#### 📍 If no `post` → CREATE Mode:
+
+```js
+else {
+  const file = await appwriteService.uploadFile(data.image[0]);
+
+  if (file) {
+    data.featuredImage = file.$id;
+    const dbPost = await appwriteService.createPost({
+      ...data,
+      userId: userData.$id
+    });
+
+    if (dbPost) {
+      navigate(`/post/${dbPost.$id}`);
+    }
+  }
+}
+```
