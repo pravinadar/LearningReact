@@ -1326,7 +1326,7 @@ Without Controller, you would need to manually manage the state of the Editor an
 
 ## 26. Made PostForm.jsx in the PostForm folder
 
-PostFprm.jsx
+PostForm.jsx
 
 ```jsx
 import React, { useCallback } from "react";
@@ -1607,7 +1607,7 @@ const slugTransform = useCallback((value) => {
 Transforms a string (usually the title) into a **slug**:
 
 - `Hello World!` → `hello-world`
-- ` My Post @2023 ` → `my-post-2023`
+- `My Post @2023` → `my-post-2023`
 
 It's wrapped in `useCallback` to memoize it and avoid recreating the function on every render.
 
@@ -1691,3 +1691,5 @@ else {
   }
 }
 ```
+
+## 27. Made all the pages in the pages folder

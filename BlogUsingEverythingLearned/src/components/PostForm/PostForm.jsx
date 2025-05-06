@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Input, RTE, Select } from "..";
-import appwriteService from "../../appwrite/config";
+import { Button, Input, RTE, SelectComponent } from "../index.js";
+import appwriteService from "../../appwrite/config.js";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -107,7 +107,7 @@ export default function PostForm({ post }) {
                         />
                     </div>
                 )}
-                <Select
+                <SelectComponent
                     options={["active", "inactive"]}
                     label="Status"
                     className="mb-4"

@@ -94,7 +94,7 @@ export class Service {
             return await this.databases.listDocuments(
                 conf.appwriteDatabaseID,
                 conf.appwriteCollectionID,
-                queries, // Ca directly use the query or queries here
+                queries, // Can directly use the query or queries here
 
             )
         } catch (error) {
