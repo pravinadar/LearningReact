@@ -1692,4 +1692,6 @@ else {
 }
 ```
 
-## 27. Made all the pages in the pages folder
+## 27. Made all the pages in the `pages` folder
+
+## 28. Edited main.jsx

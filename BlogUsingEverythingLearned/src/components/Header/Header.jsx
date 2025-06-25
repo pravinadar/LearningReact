@@ -1,7 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-
+import Container from '../container/Container.jsx'
+import { Link } from 'react-router-dom'
+import Logo from '../Logo.jsx'
+import LogoutButton from './LogoutButton.jsx'
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status)
@@ -59,7 +62,7 @@ function Header() {
             )}
             {authStatus && (
               <li>
-                <LogoutBtn />
+                <LogoutButton />
               </li>
             )}
           </ul>

@@ -4,6 +4,7 @@ import authService from './appwrite/auth'
 import './App.css'
 import { login, logout } from './store/authSlice'
 import {Header, Footer} from './components/index.js'
+import { Outlet } from 'react-router-dom'
 
 
 
@@ -27,7 +28,9 @@ function App() {
   return !loading ? (
     <div className='min-h-screen bg-slate-600'>
       <Header/>
-      <main>Test</main>
+      <main>
+        <Outlet/>
+      </main>
       <Footer/>
     </div>
 
